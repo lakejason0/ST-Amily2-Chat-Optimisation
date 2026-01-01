@@ -17,7 +17,7 @@ import { eventSource, event_types, saveSettingsDebounced } from '/script.js';
 import { checkForUpdates, fetchMessageBoardContent } from './core/api.js';
 import { setUpdateInfo, applyUpdateIndicator } from './ui/state.js';
 import { pluginVersion, extensionName, defaultSettings } from './utils/settings.js';
-import { checkAuthorization, refreshUserInfo } from './utils/auth.js';
+import { checkAuthorization } from './utils/auth.js';
 import { tableSystemDefaultSettings } from './core/table-system/settings.js';
 import { extension_settings } from '/scripts/extensions.js';
 import { manageLorebookEntriesForChat } from './core/lore.js';
@@ -899,17 +899,6 @@ jQuery(async () => {
             // 1. 先显示本地缓存的状态，保证启动速度和体验
             const displayNote = userNote || userType;
             toastr.success(`欢迎回来！授权状态有效 (用户: ${displayNote})`, "Amily2 插件已就绪");
-
-            // 2. 后台静默刷新，检查过期状态或信息更新
-            // 即使本地有备注，也需要去服务器验证一下是否过期
-            refreshUserInfo().then(data => {
-                if (data && data.note && data.note !== userNote) {
-                    console.log("[Amily2] 用户信息已更新:", data.note);
-                    // 如果备注变了，可以选择再次提示或者静默更新
-                }
-            }).catch(e => {
-                console.warn("[Amily2] 后台刷新用户信息失败:", e);
-            });
         }
 
         console.log("[Amily2号-开国大典] 步骤七：初始化版本显示系统...");
